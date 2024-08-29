@@ -1,10 +1,8 @@
 import java.time.LocalDate;
 import java.util.Scanner;
 import java.time.format.DateTimeFormatter;
-import Auth.login;
-import Auth.Register;
-import User.User;
-import  User.Consumption;
+import Auth.*;
+import  User.*;
 public class Main {
     private static User currentUser;
 
@@ -72,6 +70,8 @@ public class Main {
         System.out.println("4-Create a rapport");
         System.out.println("5-Delete Account");
         System.out.println("6-logout");
+        System.out.println("7-My Consumptions");
+        System.out.println("8-My Reports");
         int choice = input.nextInt();
         switch (choice) {
             case 1:
@@ -83,7 +83,7 @@ public class Main {
                 }else{
                     size = 0 ;
                 }
-                System.out.println("NUmber is consumptions is : " + size);
+                System.out.println("Number of consumptions is : " + size);
                 UserMenu(user);
                 break;
             case 2:
@@ -92,8 +92,11 @@ public class Main {
             case 3:
                 ManageConsumptions(user);
                 break;
-//            case 4:
-//                break;
+            case 4:
+                Report report = new Report(user);
+                report.PrintReport();
+                UserMenu(user);
+                break;
             case 5:
                 User.delete(currentUser.getId());
                 currentUser = null;
@@ -101,6 +104,7 @@ public class Main {
             case 6:
                 currentUser = null;
                 break;
+
         }
     }
 
@@ -137,7 +141,7 @@ public class Main {
         Scanner input = new Scanner(System.in);
         DateTimeFormatter formatter =  DateTimeFormatter.ofPattern("yyyy-MM-dd");
         Scanner StringInput = new Scanner(System.in);
-        System.out.println("Enter the value of the carbon (CO2)");
+        System.out.println("Enter the value of the carbon (CO2 in KG)");
         float quantity = input.nextFloat();
         System.out.println("Enter the start date");
         String start_date = StringInput.nextLine();
@@ -146,8 +150,7 @@ public class Main {
         String end_date = StringInput.nextLine();
         LocalDate end_date_formatted = LocalDate.parse(end_date , formatter);
         Consumption newConsumption =  new Consumption(quantity , start_date_formatted , end_date_formatted, user);
-        user.setConsumption(newConsumption);
-        System.out.println("consumed added plus new size is : " + user.getConsumptions().size());
+        user.addConsumption(newConsumption);
         UserMenu(user);
     }
 
