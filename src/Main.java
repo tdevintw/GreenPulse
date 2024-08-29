@@ -1,8 +1,10 @@
+import java.time.LocalDate;
 import java.util.Scanner;
+import java.time.format.DateTimeFormatter;
 import Auth.login;
 import Auth.Register;
 import User.User;
-
+import  User.Consumption;
 public class Main {
     private static User currentUser;
 
@@ -32,17 +34,17 @@ public class Main {
             login newLogin = new login();
             System.out.println("Enter Your name");
             String name = input.nextLine();
-            if(newLogin.nameExist(name)){
+            if (newLogin.nameExist(name)) {
                 System.out.println("Enter Your password");
                 String password = input.nextLine();
-                currentUser = newLogin.checkPassword(name , password);
-                if(currentUser !=null){
+                currentUser = newLogin.checkPassword(name, password);
+                if (currentUser != null) {
                     UserMenu(currentUser);
-                }else{
+                } else {
                     System.out.println("password is incorrect try again");
                     LoggingMenu(1);
                 }
-            }else{
+            } else {
                 System.out.println("Name doesnt exist");
             }
 
@@ -62,6 +64,7 @@ public class Main {
 
     public static void UserMenu(User user) {
         Scanner input = new Scanner(System.in);
+        int size;
         System.out.println("Welcome Back " + user.getName());
         System.out.println("1-See Personal information");
         System.out.println("2-Edit Personal information");
@@ -70,24 +73,38 @@ public class Main {
         System.out.println("5-Delete Account");
         System.out.println("6-logout");
         int choice = input.nextInt();
-        if(choice ==1){
-            System.out.println("Name: " + user.getName());
-            System.out.println("Password: " + user.getPassword());
-            System.out.println("Age: "+ user.getAge());
-            UserMenu(user);
-
-        }else if(choice ==2){
-            update(user);
-        }
-        else if (choice == 5) {
-            User.delete(currentUser.getId());
-            currentUser = null;
-        }else if(choice ==6){
-            currentUser = null;
+        switch (choice) {
+            case 1:
+                System.out.println("Name: " + user.getName());
+                System.out.println("Password: " + user.getPassword());
+                System.out.println("Age: " + user.getAge());
+                if(user.getConsumptions() != null){
+                    size = user.getConsumptions().size();
+                }else{
+                    size = 0 ;
+                }
+                System.out.println("NUmber is consumptions is : " + size);
+                UserMenu(user);
+                break;
+            case 2:
+                update(user);
+                break;
+            case 3:
+                ManageConsumptions(user);
+                break;
+//            case 4:
+//                break;
+            case 5:
+                User.delete(currentUser.getId());
+                currentUser = null;
+                break;
+            case 6:
+                currentUser = null;
+                break;
         }
     }
 
-    public static void update(User user){
+    public static void update(User user) {
         Scanner input = new Scanner(System.in);
         Scanner StringInput = new Scanner(System.in);
         System.out.println("What do you want to change");
@@ -95,19 +112,43 @@ public class Main {
         System.out.println("2-Password");
         System.out.println("3-Age");
         int choice = input.nextInt();
-        if(choice ==1){
-            System.out.println("Enter Your new Name");
-            String newName = StringInput.nextLine();
-            user.setName(newName);
-        } else if (choice ==2) {
-            System.out.println("Enter Your new password");
-            String newPassword = StringInput.nextLine();
-            user.setPassword(newPassword);
-        } else if (choice ==3) {
-            System.out.println("Enter Your new Name");
-            int newAge = input.nextInt();
-            user.setAge(newAge);
+        switch (choice) {
+            case 1:
+                System.out.println("Enter Your new Name");
+                String newName = StringInput.nextLine();
+                user.setName(newName);
+                break;
+            case 2:
+                System.out.println("Enter Your new password");
+                String newPassword = StringInput.nextLine();
+                user.setPassword(newPassword);
+                break;
+            case 3:
+                System.out.println("Enter Your new Name");
+                int newAge = input.nextInt();
+                user.setAge(newAge);
+                break;
         }
+
         UserMenu(user);
     }
+
+    public static void ManageConsumptions(User user){
+        Scanner input = new Scanner(System.in);
+        DateTimeFormatter formatter =  DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        Scanner StringInput = new Scanner(System.in);
+        System.out.println("Enter the value of the carbon (CO2)");
+        float quantity = input.nextFloat();
+        System.out.println("Enter the start date");
+        String start_date = StringInput.nextLine();
+        LocalDate start_date_formatted = LocalDate.parse(start_date , formatter);
+        System.out.println("Enter the end date");
+        String end_date = StringInput.nextLine();
+        LocalDate end_date_formatted = LocalDate.parse(end_date , formatter);
+        Consumption newConsumption =  new Consumption(quantity , start_date_formatted , end_date_formatted, user);
+        user.setConsumption(newConsumption);
+        System.out.println("consumed added plus new size is : " + user.getConsumptions().size());
+        UserMenu(user);
+    }
+
 }

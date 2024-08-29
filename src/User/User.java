@@ -3,12 +3,15 @@ package User;
 import Database.Database;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class User {
     private int  Id;
     private String name;
     private int age;
     private String password;
+    private HashMap<Integer ,  Consumption> consumptions;
 
     public User(int age , String name , String password) {
         Id = (int)(Math.random()*1000000000);
@@ -47,9 +50,21 @@ public class User {
         return password;
     }
 
+    public HashMap<Integer, Consumption> getConsumptions() {
+        return consumptions;
+    }
+
+    public void setConsumption(Consumption consumption) {
+//        System.out.println("id is "+ consumption.getId() +  "quantity is " + +consumption.getCarbonQuantity() + "user name is"+consumption.getUser().getName());
+        if(this.consumptions == null){
+            consumptions = new HashMap<Integer, Consumption>();
+        }
+        consumptions.put(consumption.getId() , consumption);
+    }
+
     public static  void delete(int Id){
         Database database = Database.getDatabase();
-        ArrayList<User> users = database.getUsers();
+        List<User> users = database.getUsers();
         for(User user : users){
             if(user.getId()==Id){
                 users.remove(user);
@@ -57,6 +72,7 @@ public class User {
             }
         }
     }
+
 
 
 }
