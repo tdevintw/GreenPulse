@@ -9,16 +9,16 @@ import java.util.HashMap;
 import java.util.List;
 
 public class User {
-    private int  Id;
+    private final int Id;
     private String name;
     private int age;
     private String password;
-    private HashMap<Integer ,  Consumption> consumptions;
+    private HashMap<Integer, Consumption> consumptions;
     private List<Report> reports;
-    private LocalDateTime created_at;
+    private final LocalDateTime created_at;
 
-    public User(int age , String name , String password) {
-        Id = (int)(Math.random()*1000000000);
+    public User(int age, String name, String password) {
+        Id = (int) (Math.random() * 1000000000);
         this.name = name;
         this.age = age;
         this.password = password;
@@ -51,7 +51,7 @@ public class User {
         return age;
     }
 
-    public String getPassword(){
+    public String getPassword() {
         return password;
     }
 
@@ -61,14 +61,14 @@ public class User {
 
     public void addConsumption(Consumption consumption) {
 //        System.out.println("id is "+ consumption.getId() +  "quantity is " + +consumption.getCarbonQuantity() + "user name is"+consumption.getUser().getName());
-        if(this.consumptions == null){
+        if (this.consumptions == null) {
             consumptions = new HashMap<Integer, Consumption>();
         }
-        consumptions.put(consumption.getId() , consumption);
+        consumptions.put(consumption.getId(), consumption);
     }
 
-    public void addReport(Report report){
-        if(this.reports == null){
+    public void addReport(Report report) {
+        if (this.reports == null) {
             reports = new ArrayList<>();
         }
         reports.add(report);
@@ -84,18 +84,16 @@ public class User {
     }
 
 
-
-    public static  void delete(int Id){
+    public static void delete(int Id) {
         Database database = Database.getDatabase();
         List<User> users = database.getUsers();
-        for(User user : users){
-            if(user.getId()==Id){
+        for (User user : users) {
+            if (user.getId() == Id) {
                 users.remove(user);
                 break;
             }
         }
     }
-
 
 
 }

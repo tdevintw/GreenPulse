@@ -11,10 +11,10 @@ public class Consumption {
     private LocalDate start_date;
     private LocalDate end_date;
     private User user;
-    private LocalDateTime created_date;
+    private final LocalDateTime created_date;
 
     public Consumption(float carbonQuantity, LocalDate start_date, LocalDate end_date, User user) {
-        this.id = (int)(Math.random()*1000000000);
+        this.id = (int) (Math.random() * 1000000000);
         this.carbonQuantity = carbonQuantity;
         this.start_date = start_date;
         this.end_date = end_date;

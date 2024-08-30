@@ -78,6 +78,7 @@ public class Main {
         System.out.println("6-logout");
         System.out.println("7-My Consumptions");
         System.out.println("8-My Reports");
+        System.out.println("9-Advanced Reports");
         int choice = input.nextInt();
         switch (choice) {
             case 1:
@@ -128,6 +129,8 @@ public class Main {
             case 8:
                 allReports(user);
                 break;
+            case 9:
+                advancedReport(user);
         }
     }
 
@@ -212,27 +215,53 @@ public class Main {
 
     }
 
-    public static void allReports(User user){
+    public static void allReports(User user) {
 
-        if(user.getReports() != null){
+        if (user.getReports() != null) {
             DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy MMMM dd HH:mm:ss");
 
-            int i  = 1;
+            int i = 1;
             logo();
-            for(Report report : user.getReports()){
+            for (Report report : user.getReports()) {
                 String formattedDateTime = report.getCreated_at().format(outputFormatter);
 
-                System.out.println("The "+ i + " Report : ");
-                System.out.println("Average Day of Carbon : "+report.getDayAverage()+"KG");
-                System.out.println("Average Month of Carbon : "+report.getMonthAverage()+"KG");
-                System.out.println("Average Year of Carbon : "+report.getYearAverage()+"KG");
-                System.out.println("Created at : " +formattedDateTime);
-                System.out.println();System.out.println();
-            i++;
+                System.out.println("The " + i + " Report : ");
+                System.out.println("Average Day of Carbon : " + report.getDayAverage() + "KG");
+                System.out.println("Average Month of Carbon : " + report.getMonthAverage() + "KG");
+                System.out.println("Average Year of Carbon : " + report.getYearAverage() + "KG");
+                System.out.println("Created at : " + formattedDateTime);
+                System.out.println();
+                System.out.println();
+                i++;
             }
-        }else{
+        } else {
             System.out.println("There is no Reports Yet ! ");
         }
+        UserMenu(user);
+    }
+
+    public static void advancedReport(User user) {
+        Scanner input = new Scanner(System.in);
+        logo();
+        if (user.getConsumptions() == null) {
+            System.out.println("No Data added yet !");
+
+        } else {
+            System.out.println("filter by 1-Days 2-Weeks 3-Months");
+            int choice = input.nextInt();
+            switch (choice) {
+                case 1:
+                    Report.filterByDays(user);
+                    break;
+                case 2:
+                    Report.filterByWeeks(user);
+                    break;
+                case 3:
+                    Report.filterByMonths(user);
+                    break;
+            }
+        }
+
         UserMenu(user);
     }
 
