@@ -3,6 +3,7 @@ package User;
 import Database.Database;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,14 +15,14 @@ public class User {
     private String password;
     private HashMap<Integer ,  Consumption> consumptions;
     private List<Report> reports;
-    private LocalDate created_at;
+    private LocalDateTime created_at;
 
     public User(int age , String name , String password) {
         Id = (int)(Math.random()*1000000000);
         this.name = name;
         this.age = age;
         this.password = password;
-        this.created_at = LocalDate.now();
+        this.created_at = LocalDateTime.now();
 
     }
 
@@ -67,14 +68,13 @@ public class User {
     }
 
     public void addReport(Report report){
-        if(report.getUser() == null){
+        if(this.reports == null){
             reports = new ArrayList<>();
         }
         reports.add(report);
-
     }
 
-    public LocalDate getCreated_at() {
+    public LocalDateTime getCreated_at() {
         return created_at;
     }
 
@@ -83,11 +83,8 @@ public class User {
         return reports;
     }
 
-    public void setReports(List<Report> reports) {
-        this.reports = reports;
-    }
 
-    //need to show all reports and consumations and the date where they add time.now()
+
     public static  void delete(int Id){
         Database database = Database.getDatabase();
         List<User> users = database.getUsers();

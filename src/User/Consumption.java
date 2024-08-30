@@ -3,6 +3,7 @@ package User;
 import Database.Database;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Consumption {
     private int id;
@@ -10,6 +11,7 @@ public class Consumption {
     private LocalDate start_date;
     private LocalDate end_date;
     private User user;
+    private LocalDateTime created_date;
 
     public Consumption(float carbonQuantity, LocalDate start_date, LocalDate end_date, User user) {
         this.id = (int)(Math.random()*1000000000);
@@ -17,6 +19,7 @@ public class Consumption {
         this.start_date = start_date;
         this.end_date = end_date;
         this.user = user;
+        this.created_date = LocalDateTime.now();
     }
 
     public int getId() {
@@ -57,6 +60,10 @@ public class Consumption {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public LocalDateTime getCreated_date() {
+        return created_date;
     }
 
 
