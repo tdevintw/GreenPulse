@@ -1,7 +1,8 @@
 package Auth;
 import Database.Database;
 import  User.User;
-public class login {
+public class Login {
+
 
     public boolean nameExist(String name){
         Database database = Database.getDatabase();

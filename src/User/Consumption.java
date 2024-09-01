@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Consumption {
-    private int id;
+    private final int id;
     private float carbonQuantity;
     private LocalDate start_date;
     private LocalDate end_date;
@@ -26,9 +26,7 @@ public class Consumption {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+
 
     public float getCarbonQuantity() {
         return carbonQuantity;
@@ -42,16 +40,9 @@ public class Consumption {
         return start_date;
     }
 
-    public void setStart_date(LocalDate start_date) {
-        this.start_date = start_date;
-    }
 
     public LocalDate getEnd_date() {
         return end_date;
-    }
-
-    public void setEnd_date(LocalDate end_date) {
-        this.end_date = end_date;
     }
 
     public User getUser() {

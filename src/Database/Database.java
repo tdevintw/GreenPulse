@@ -1,7 +1,6 @@
 package Database;
 
 import User.User;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,10 +8,7 @@ public class Database {
     private static Database database;
     private List<User> users;
 
-    private Database() {
-    }
-
-    ;
+    private Database() {};
 
     public static Database getDatabase() {
         if (database == null) {

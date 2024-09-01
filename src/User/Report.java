@@ -2,6 +2,7 @@ package User;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.Map;
 import java.time.temporal.ChronoUnit;
 import java.time.format.DateTimeFormatter;
@@ -18,7 +19,7 @@ public class Report {
     private double monthAverage;
     private double yearAverage;
 
-    public static long CalculateTotalOfDays(User user) {
+    public static long calculateTotalOfDays(User user) {
         long TotalDays = 0;
 
         for (Map.Entry<Integer, Consumption> consumptionEntry : user.getConsumptions().entrySet()) {
@@ -31,7 +32,7 @@ public class Report {
 
     }
 
-    public static float CalculateTotalOfCarbon(User user) {
+    public static float calculateTotalOfCarbon(User user) {
         float TotalCarbon = 0;
 
         for (Map.Entry<Integer, Consumption> consumptionEntry : user.getConsumptions().entrySet()) {
@@ -45,13 +46,15 @@ public class Report {
 
     public Report(User user) {
         this.id = (int) (Math.random() * 10000000);
-        this.totalOfDays = CalculateTotalOfDays(user);
-        this.totalOfCarbon = CalculateTotalOfCarbon(user);
+        this.totalOfDays = calculateTotalOfDays(user);
+        this.totalOfCarbon = calculateTotalOfCarbon(user);
         this.user = user;
         this.created_at = LocalDateTime.now();
     }
 
-    public void PrintReport() {
+    public void printReport() {
+        System.out.println("Creating Your Rapport... : ");
+
 
         double dayQuantityCheck = this.totalOfDays < 1 ? 0 : this.totalOfCarbon / this.totalOfDays;
         this.dayAverage = dayQuantityCheck;
@@ -125,11 +128,11 @@ public class Report {
             totalDays++;
             double average = totalCarbon / totalDays;
             int i = 0;
-            LocalDate start = consumption.getStart_date();
+            LocalDate current = consumption.getStart_date();
             while (i < totalDays) {
-                String formattedDay = start.format(formatter);
-                System.out.println(formattedDay + " " + average);
-                start = start.plusDays(1);
+                String formattedDay = current.format(formatter);
+                System.out.println("For " + formattedDay + " " + current.getYear() + " :" + average);
+                current = current.plusDays(1);
                 i++;
             }
             System.out.println();
@@ -139,18 +142,32 @@ public class Report {
 
     public static void filterByWeeks(User user) {
         double totalCarbon;
+        long totalDays;
 
         for (Map.Entry<Integer, Consumption> consumptionEntry : user.getConsumptions().entrySet()) {
             Consumption consumption = consumptionEntry.getValue();
             totalCarbon = consumption.getCarbonQuantity();
-            int weekNumberStart = consumption.getStart_date().get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
-            int weekNumberEnd = consumption.getEnd_date().get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
+            totalDays = ChronoUnit.DAYS.between(consumption.getStart_date(), consumption.getEnd_date());
+            int weekNumberStart = getWeekNumber(consumption.getStart_date());
+            int weekNumberEnd = getWeekNumber(consumption.getEnd_date());
+            LocalDate startOfYear = LocalDate.of(consumption.getStart_date().getYear(), 1, 1);
+            totalDays++;
+            long daysBetween = ChronoUnit.DAYS.between(startOfYear, consumption.getStart_date()) + 1;
+            double average = totalCarbon / totalDays;
+            long  leftDays = 7- (daysBetween%7)+1;
+            long checkDays = totalDays % 7 -leftDays;
+            LocalDate current = consumption.getStart_date();
+            for (int i = weekNumberStart; i <= weekNumberEnd; i++) {
+                if (i == weekNumberEnd && checkDays != 0) {
+                    System.out.println("Week " + i + "  " + current.getYear() + " : Quantity of carbon is " + checkDays * average);
+                    break;
+                } else if (i == weekNumberStart && daysBetween % 7 != 1) {
+                    System.out.println("Week " + i + "  " + current.getYear() + " : Quantity of carbon is " + leftDays * average);
+                    continue;
+                }
 
-            double average = totalCarbon / (weekNumberEnd - weekNumberStart + 1);
-            int i = weekNumberStart;
-            while (i <= weekNumberEnd) {
-                System.out.println("week " + i + " :" + " " + average);
-                i++;
+                System.out.println("Week " + i + "  " + current.getYear() + " : Quantity of carbon is " + average * 7);
+                current = current.plusDays(7);
             }
             System.out.println();
             System.out.println();
@@ -159,23 +176,46 @@ public class Report {
 
     public static void filterByMonths(User user) {
         double totalCarbon;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM yyyy");
+        long totalDays;
+        double average;
         for (Map.Entry<Integer, Consumption> consumptionEntry : user.getConsumptions().entrySet()) {
             Consumption consumption = consumptionEntry.getValue();
             totalCarbon = consumption.getCarbonQuantity();
-            long monthsBetween = ChronoUnit.MONTHS.between(consumption.getStart_date(), consumption.getEnd_date());
+            totalDays = ChronoUnit.DAYS.between(consumption.getStart_date(), consumption.getEnd_date());
+            totalDays++;
+            average = totalCarbon / totalDays;
+            int monthLength;
+            YearMonth yearMonth;
+            LocalDate current = consumption.getStart_date();
+            while (!current.isAfter(consumption.getEnd_date())) {
+                yearMonth = YearMonth.of(current.getYear(), current.getMonth());
+                monthLength = yearMonth.lengthOfMonth();
+                if (current.getMonth().equals(consumption.getEnd_date().getMonth()) && current.getYear() == consumption.getEnd_date().getYear()) {
+                    System.out.println("Quantity of carbon for : " + current.getMonth() + " " + current.getYear() + " is : " + average * (current.getDayOfMonth()));
+                } else if (current.getMonth().equals(consumption.getStart_date().getMonth()) && current.getYear() == consumption.getStart_date().getYear()) {
+                    System.out.println("Quantity of carbon for : " + current.getMonth() + " " + current.getYear() + " is : " + average * (monthLength - current.getDayOfMonth() + 1));
 
-            double average = totalCarbon / monthsBetween;
-            LocalDate start = consumption.getStart_date();
-            int i = 1;
-            while ( i<= monthsBetween) {
-                String formattedMonth = start.format(formatter);
-                System.out.println(formattedMonth + " " + average);
-                start = start.minusMonths(1);
-                i++;
+                } else {
+                    System.out.println("Quantity of carbon for : " + current.getMonth() + " " + current.getYear() + " is : " + average * (monthLength));
+
+                }
+                current = current.plusMonths(1).withDayOfMonth(1);
             }
             System.out.println();
             System.out.println();
         }
     }
+
+    public static int getWeekNumber(LocalDate date) {
+        int dateDayOfYear = date.getDayOfYear();
+        return (dateDayOfYear - 1) / 7 + 1;
+    }
+
+    public static int getMonthNumber(LocalDate date) {
+        int dateDayOfYear = date.getDayOfYear();
+        return (dateDayOfYear - 1) / 30 + 1;
+    }
+
+
 }
+

@@ -33,4 +33,7 @@ The project contains the following key components:
 
 
 ## 🛠 Skills
-Java
+<p>
+    <img src="https://skillicons.dev/icons?i=git,idea,java" height="45" alt="html5 logo"  />
+
+</p>

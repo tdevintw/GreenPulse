@@ -26,46 +26,72 @@ public class Main {
         if (choice != 1 && choice != 2) {
             System.out.println("Please Enter a valid Number");
         } else {
-            LoggingMenu(choice);
+            loggingMenu(choice);
         }
     }
 
-    public static void LoggingMenu(int choice) {
+    public static void loggingMenu(int choice) {
         logo();
         Scanner input = new Scanner(System.in);
         if (choice == 1) {
-            login newLogin = new login();
-            System.out.println("Enter Your name");
+            Login newLogin = new Login();
+            System.out.println("Enter Your name , (to exit type exit)");
             String name = input.nextLine();
-            if (newLogin.nameExist(name)) {
+            if(name.equals("exit")){
+               notLoggingMenu();
+            }
+            else if (newLogin.nameExist(name)) {
                 System.out.println("Enter Your password");
                 String password = input.nextLine();
                 currentUser = newLogin.checkPassword(name, password);
                 if (currentUser != null) {
-                    UserMenu(currentUser);
+                    userMenu(currentUser);
                 } else {
                     System.out.println("password is incorrect try again");
-                    LoggingMenu(1);
+                    loggingMenu(1);
                 }
             } else {
                 System.out.println("Name doesnt exist");
             }
 
         } else {
-            System.out.println("Enter Your name");
+            System.out.println("Enter Your name (exit)");
             String name = input.nextLine();
-            System.out.println("Enter your password");
+            if(name.equals("exit")){
+                notLoggingMenu();
+            }
+            while(name.length() <3){
+                System.out.println("name must be at least 3 character , try again");
+                name = input.nextLine();
+            }
+
+            System.out.println("Enter your password (exit)");
             String password = input.nextLine();
-            System.out.println("Enter your age");
+            if(password.equals("exit")){
+                notLoggingMenu();
+            }
+            while(password.length() <6){
+                System.out.println("password must be at least 6 character , try again");
+                password = input.nextLine();
+            }
+            System.out.println("Enter your age (0 to exit)");
             int age = input.nextInt();
+            if(age ==0){
+                notLoggingMenu();
+            }
+            while (age<0){
+                System.out.println("age cant be less then 1 , try again");
+                age = input.nextInt();
+            }
             Register newAccount = new Register();
             User user = newAccount.create(age, name, password);
             currentUser = user;
-            UserMenu(user);
+            userMenu(user);
         }
     }
 
-    public static void UserMenu(User user) {
+
+    public static void userMenu(User user) {
         logo();
         Scanner input = new Scanner(System.in);
         int size;
@@ -97,24 +123,24 @@ public class Main {
                     size = 0;
                 }
                 System.out.println("Number of Reports is : " + size);
-                UserMenu(user);
+                userMenu(user);
                 break;
             case 2:
                 update(user);
                 break;
             case 3:
-                ManageConsumptions(user);
+                manageConsumptions(user);
                 break;
             case 4:
 
                 if (user.getConsumptions() != null) {
                     Report report = new Report(user);
                     user.addReport(report);
-                    report.PrintReport();
+                    report.printReport();
                 } else {
                     System.out.println("There are no Consumptions yet");
                 }
-                UserMenu(user);
+                userMenu(user);
                 break;
             case 5:
                 User.delete(currentUser.getId());
@@ -161,25 +187,40 @@ public class Main {
                 break;
         }
 
-        UserMenu(user);
+        userMenu(user);
     }
 
-    public static void ManageConsumptions(User user) {
+    public static void manageConsumptions(User user) {
         logo();
         Scanner input = new Scanner(System.in);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         Scanner StringInput = new Scanner(System.in);
-        System.out.println("Enter the value of the carbon (CO2 in KG)");
+        System.out.println("Enter the value of the carbon (CO2 in KG) , (0 to exit)");
         float quantity = input.nextFloat();
-        System.out.println("Enter the start date");
+        if(quantity ==0){
+            userMenu(user);
+        }
+        while (quantity<0){
+            System.out.println("Quantity cant be negative");
+            quantity = input.nextFloat();
+        }
+        System.out.println("Enter the start date:(yyyy-MM-dd) ,  exit");
         String start_date = StringInput.nextLine();
+
+        if(start_date.equals("exit")){
+            userMenu(user);
+        }
+
         LocalDate start_date_formatted = LocalDate.parse(start_date, formatter);
-        System.out.println("Enter the end date");
+        System.out.println("Enter the end date:(yyyy-MM-dd) ,  exit");
         String end_date = StringInput.nextLine();
+        if(end_date.equals("exit")){
+            userMenu(user);
+        }
         LocalDate end_date_formatted = LocalDate.parse(end_date, formatter);
         Consumption newConsumption = new Consumption(quantity, start_date_formatted, end_date_formatted, user);
         user.addConsumption(newConsumption);
-        UserMenu(user);
+        userMenu(user);
     }
 
     public static void logo() {
@@ -211,7 +252,7 @@ public class Main {
         } else {
             System.out.println("There is no Consumptions Added Yet !");
         }
-        UserMenu(user);
+        userMenu(user);
 
     }
 
@@ -237,7 +278,7 @@ public class Main {
         } else {
             System.out.println("There is no Reports Yet ! ");
         }
-        UserMenu(user);
+        userMenu(user);
     }
 
     public static void advancedReport(User user) {
@@ -262,7 +303,7 @@ public class Main {
             }
         }
 
-        UserMenu(user);
+        userMenu(user);
     }
 
 }
