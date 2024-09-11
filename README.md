@@ -9,16 +9,15 @@ GreenPulse is a Java-based console application designed to help users measure an
 
 
 ## 🚀 About Me
-I'm a full stack developer...
+Coding enthusiast and full stack developer who loves solving problems and bringing ideas to reality using web development tools..
 
 
 ## Features
 
-- **User Registration and Login**: Users can create an account and log in to track their consumption.
-- **Manage Consumptions**: Users can add carbon consumption data with start and end dates.
-- **Generate Reports**: Users can generate reports showing their average daily, monthly, and yearly carbon consumption.
-- **View and Edit Personal Information**: Users can view and update their personal information.
-- **View Consumptions and Reports**: Users can view a list of their consumptions and reports.
+-**Login**: access Only for admin 
+- **Manage users**: Delete all users and update personal info
+- **Undo changes**: Admin can undo changes made in the databse 
+
 
 ## Code Overview
 
@@ -26,14 +25,13 @@ The project contains the following key components:
 
 - **Main.java**: Entry point of the application, handles user menus and interactions.
 - **User.java**: Represents a user in the system, including personal information and a list of consumptions and reports.
-- **Consumption.java**: Represents a carbon consumption entry with details such as the quantity, start date, and end date.
-- **Report.java**: Generates reports based on user consumption data.
-- **Database.java**: Simulates a database storing user information.
-
+- **Database.java**:  a singleton pattern was implemented to ensure that only one instance will be created out of this class.
+- **UserService**:  represente the low modules of the project, userService contains the logic and the calculations , it's like the bride that link the repository and the main(view)
+- **UserRepository**:  Thanks to the repository pattern we can abstract the low modules from the databse the repository pattern ensure to hide the databse base from the rest of the project which enhance maintainability and performance , in this context i use userReposiotry to fetch or isnert data from the database . 
 
 
 ## 🛠 Skills
 <p>
-    <img src="https://skillicons.dev/icons?i=git,idea,java" height="45" alt="html5 logo"  />
+    <img src="https://skillicons.dev/icons?i=git,idea,java,maven" height="45" alt="html5 logo"  />
 
 </p>
