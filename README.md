@@ -3,10 +3,6 @@
 
 GreenPulse is a Java-based console application designed to help users measure and monitor their carbon footprints. By offering features such as account management, real-time tracking of carbon consumption, and analysis tools, GreenPulse aims to empower individuals to make more sustainable choices. The application provides users with insights into their environmental impact and helps them track their carbon footprint over time.
 
-## Screenshots
-
-![App Screenshot](https://www.imghippo.com/storage/files/QADq11725013315.png)
-
 
 ## 🚀 About Me
 Coding enthusiast and full stack developer who loves solving problems and bringing ideas to reality using web development tools..
@@ -16,7 +12,7 @@ Coding enthusiast and full stack developer who loves solving problems and bringi
 
 -**Login**: access Only for admin 
 - **Manage users**: Delete all users and update personal info
-- **Undo changes**: Admin can undo changes made in the databse 
+- **Undo changes**: Admin can undo changes made in the database 
 
 
 ## Code Overview
